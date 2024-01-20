@@ -396,7 +396,8 @@ if (isDarkMode) {
           const taskIndex = to_do_data.findIndex(item => item.tasks === data);
           if (taskIndex !== -1) {
             to_do_data[taskIndex].status = "completed";
-            saveLocalData();
+            // saveLocalData();
+            localStorage.setItem("to_do_data_array", JSON.stringify(to_do_data));
             console.log(to_do_data[taskIndex].status);
           }
           updateTaskCounts();
@@ -418,7 +419,8 @@ if (isDarkMode) {
           const taskIndex = to_do_data.findIndex(item => item.tasks === data);
           if (taskIndex !== -1) {
             to_do_data[taskIndex].status = "active";
-            saveLocalData();
+            // saveLocalData();
+            localStorage.setItem("to_do_data_array", JSON.stringify(to_do_data));
             console.log(to_do_data[taskIndex].status);
           }
           updateTaskCounts();
@@ -480,7 +482,8 @@ if (isDarkMode) {
         edited_button.addEventListener("click", () => {
           const edited_to_do = newLine.children[1].innerHTML;
           to_do_data[index_edit_to_do].tasks = edited_to_do;
-          saveLocalData();
+          // saveLocalData();
+          localStorage.setItem("to_do_data_array", JSON.stringify(to_do_data));
 
           done_button.style.display = "inline-block";
           newLine.style.gridTemplateColumns = "1fr 8fr 1fr 1fr 1fr";
@@ -500,7 +503,9 @@ if (isDarkMode) {
       delete_button.addEventListener("click", () => {
         const to_do_index = newLine.children[1].innerHTML;
         to_do_data.splice(to_do_data.findIndex(item => item.tasks === to_do_index), 1);
-        saveLocalData();
+        // saveLocalData();
+        localStorage.setItem("to_do_data_array", JSON.stringify(to_do_data));
+        updateTaskCounts();
         newLine.remove();
       });
 
