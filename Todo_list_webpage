@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Todo-s</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;1,200&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;1,200&family=Ubuntu:wght@500&display=swap"
+      rel="stylesheet"
+    />
+
+
+    <link rel="icon" type="image/x-icon" href="\todo_favicon.png">
+
+
+    <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        line-height: 1.6;
+        background-color: rgb(218, 218, 218);
+        /* background-color: rgb(47, 46, 46); */
+
+      }
+
+      .container{
+        background-color: #f8f9fa;
+        color: black;
+        /* background: rgba( 124, 228, 228, 0.4 ); */
+box-shadow: 0 8px 150px 0 rgba(157, 224, 230, 0.37);
+backdrop-filter: blur( 3px );
+-webkit-backdrop-filter: blur( 3px );
+border-radius: 10px;
+border: 1px solid rgba( 255, 255, 255, 0.18 );
+/* border-radius: 200px; */
+        backdrop-filter: blur(5px);
+      }
+
+      .add-todo-input,
+      .edit-todo-input {
+        outline: none;
+      }
+
+      .add-todo-input:focus,
+      .edit-todo-input:focus {
+        border: none !important;
+        box-shadow: none !important;
+      }
+
+      .view-opt-label,
+      .date-label {
+        font-size: 0.8rem;
+      }
+
+      .edit-todo-input {
+        font-size: 1.7rem !important;
+      }
+
+      .todo-actions {
+        visibility: hidden !important;
+      }
+
+      .todo-item:hover .todo-actions {
+        visibility: visible !important;
+      }
+
+      .todo-item.editing .todo-actions .edit-icon {
+        display: none !important;
+      }
+
+      .heading {
+        color: rgb(40, 255, 255);
+      }
+
+      .todo_heading_icon {
+        background-color: aqua;
+        margin: 10px;
+      }
+
+      .calendar_icon {
+        padding-right: 25px;
+      }
+
+      .add_btn {
+        background-color: aqua;
+        text-decoration-color: white;
+      }
+
+      u {
+        font-family: "Poppins", sans-serif;
+        font-family: "Ubuntu", sans-serif;
+        font-weight: bolder;
+      }
+
+      .edit_btn {
+        background-color: aqua;
+        color: rgb(255, 255, 255);
+      }
+
+      .information_bar{
+        display: grid;
+        grid-template-columns: 2fr 2fr 5fr 3fr;
+      }
+
+      #totalCompletedTasks{
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+
+      #totalActiveTasks{
+        margin-top: 10px;
+        margin-bottom: 10px;
+
+      }
+
+      .new_task {
+        padding-bottom: 10px;
+        display: grid;
+        grid-template-columns: 1fr 8fr 1fr 1fr 1fr;
+      }
+
+      .edit_button,
+      .edited_button,
+      .delete_button,
+      .done_button {
+        padding-top: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+        background-color: transparent;
+      }
+
+      .content_div {
+        background: transparent;
+        outline: none;
+      }
+
+      #mode_icon {
+            cursor: pointer;
+        }
+
+        #date-picker {
+            position: absolute;
+            z-index: 1;
+            display: none;
+            background-color: #f9f9f9;
+            border: 1px solid #d4d4d4;
+            box-shadow: 0 8px 16px 0 rgba(224, 165, 165, 0.2);
+            padding: 10px;
+        }
+
+        #date-picker input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 8px;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+
+        /* .all:hover {
+    background-color: aqua;
+    color: white;
+} */
+    </style>
+
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+  </head>
+
+  <body>
+    <div class="container m-5 p-2 rounded mx-auto">
+      <!-- App title section -->
+      <div class="row m-1 p-4">
+          <div class="col">
+              <div class="btn toggle-dark-mode" onclick="toggleDarkMode()">
+                <div id="mode-icon"><lord-icon
+                  src="https://cdn.lordicon.com/hmygqgiw.json"
+                  trigger="hover"
+                  stroke="bold"
+                  colors="primary:#4be1ec,secondary:#e4e4e4"
+                  style="width:60px;height:60px">
+              </lord-icon>`</div>
+</div>
+              <div class="p-1 h1 text-center mx-auto display-inline-block heading">
+                  <i class="bi bi-check2-square text-white rounded p-2 todo_heading_icon" id="add_btn"></i>
+                  <u>My Todo-s</u>
+              </div>
+          </div>
+      </div>
+  
+      <!-- Create todo section -->
+      <div class="row m-1 p-3">
+          <div class="col col-11 mx-auto">
+              <div class="row bg-white rounded shadow-sm p-2 add-todo-wrapper align-items-center justify-content-center">
+                  <div class="col">
+                      <input class="form-control form-control-lg border-0 add-todo-input"
+                             type="text" placeholder="Add new .." id="input"/>
+                  </div>
+                  <!-- <div class="col-auto m-0 px-2 d-flex align-items-center" type="date">
+                      <label class="text-secondary my-2 p-0 px-1 view-opt-label due-date-label d-none"
+                             data-toggle="tooltip" data-placement="bottom"
+                             title="Clear Due date">Due date not set</label>
+                      <i class="bi bi-calendar2-minus clear-due-date-button calendar_icon"
+                         data-toggle="tooltip" data-placement="bottom" title="Set a Due date"
+                         onclick="toggleDatePicker()"></i>
+                      <div id="date-picker">
+                          <input type="date" id="due-date-input">
+                          <button onclick="setDueDate()">Set Due Date</button>
+                      </div>
+                  </div> -->
+                  <div class="col-auto px-0 mx-0 mr-2 add_btn">
+                      <button type="button" class="btn" id="add">Add</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="p-2 mx-4 border-black-25 border-bottom"></div>
+  
+      <!-- View options section -->
+      <div class="row m-1 p-3 px-5 justify-content-end information_bar">
+          <div id="totalActiveTasks"></div>
+          <div id="totalCompletedTasks"></div>
+          <div></div>
+          <div class="col-auto d-flex align-items-center">
+              <label class="text-secondary my-2 pr-2 view-opt-label filter_todo">Filter</label>
+              <select class="custom-select custom-select-sm btn my-2 filter_options">
+                  <option value="all" selected class="all">All</option>
+                  <option value="completed">Completed</option>
+                  <option value="active">Active</option>
+              </select>
+          </div>
+      </div>
+  
+      <!-- Todo list section-->
+      <div class="containerr" id="containerr"></div>
+  </div>
+  </body>
+
+
+  <script defer>
+
+  var add_btn = document.getElementById("add");
+  const input_variable = document.getElementById("input");
+  add_btn.addEventListener('click', () => add(input_variable.value, true));
+  var to_do_data = [];
+  var localdata = localStorage.getItem("to_do_data_array");
+
+  function updateTaskCounts() {
+  const totalTasks = to_do_data.length;
+  const totalActiveTasks = to_do_data.filter(task => task.status === 'active').length;
+  const totalCompletedTasks = to_do_data.filter(task => task.status === 'completed').length;
+
+  document.getElementById('totalActiveTasks').innerHTML = `<lord-icon
+              src="https://cdn.lordicon.com/oqdmuxru.json"
+              trigger="hover"
+              colors="primary:#28ffff"
+              style="width:25px;height:25px"
+              display="center">
+            </lord-icon> Active : ${totalActiveTasks}`;
+            document.getElementById('totalActiveTasks').style.display="flex";
+            document.getElementById('totalActiveTasks').style.textAlign="center";
+            document.getElementById('totalActiveTasks').style.justifyContent="center";
+            
+            document.getElementById('totalCompletedTasks').innerHTML = `<lord-icon
+            src="https://cdn.lordicon.com/lomfljuq.json"
+            trigger="in"
+            delay="1500"
+            state="in-check"
+            colors="primary:#28ffff"
+            style="width:25px;height:25px"
+            display="center">
+            </lord-icon> Completed : ${totalCompletedTasks}`;
+            document.getElementById('totalCompletedTasks').style.display="flex";
+            document.getElementById('totalCompletedTasks').style.textAlign="center";
+            document.getElementById('totalCompletedTasks').style.justifyContent="center";
+}
+
+  function getLocalData(){
+  if (localdata !== null) {
+    to_do_data = JSON.parse(localdata);
+    for (const { tasks, status } of to_do_data) {
+      add(tasks, false, status);
+    }
+    updateTaskCounts();
+    }
+  }
+
+  getLocalData();
+  var isDarkMode = localStorage.getItem('darkMode') === 'true';
+
+if (isDarkMode) {
+  toggleDarkMode();
+}
+
+  function add(data, saveToLocal, status) {
+    if (data == "") {
+      alert("no todo to add !!!");
+    } else {
+
+    //   const isLink = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i.test(data);
+
+    // if (isLink) {
+    //     // If it's a link, create a clickable <a> element
+    //     const linkElement = document.createElement("a");
+    //     linkElement.href = data;
+    //     linkElement.target = "_blank"; // Open link in a new tab
+    //     linkElement.textContent = data;
+
+    //     // Add the link to the container
+    //     document.getElementById("containerr").appendChild(linkElement);
+    // }else{
+
+
+
+      if (saveToLocal) to_do_data.push({ tasks: data, status: 'active' });
+      var containerr = document.getElementById("containerr");
+      var newLine = document.createElement("div");
+      newLine.className = "new_task";
+      var content_div = document.createElement("div");
+      content_div.className = "content_div";
+      content_div.style.fontSize = "30px";
+      content_div.style.fontWeight = "200";
+      var edit_button = document.createElement("button");
+      edit_button.className = "edit_button";
+      var done_button = document.createElement("button");
+      done_button.className = "done_button";
+      var delete_button = document.createElement("button");
+      delete_button.className = "delete_button";
+      var edited_button = document.createElement("button");
+      edited_button.className = "edited_button";
+      edited_button.style.display = "none";
+
+      done_button.innerHTML = `
+        <lord-icon
+          src="https://cdn.lordicon.com/oqdmuxru.json"
+          trigger="hover"
+          colors="primary:#28ffff"
+          style="width:40px;height:40px"
+          display="center">
+        </lord-icon>`;
+
+      newLine.appendChild(done_button);
+      var done_button_count = 0;
+      done_button.onclick = function () {
+        done_button_count++;
+      };
+
+      done_button.addEventListener("click", () => {
+        done_button.innerHTML = `
+          <lord-icon
+            src="https://cdn.lordicon.com/lomfljuq.json"
+            trigger="in"
+            delay="1500"
+            state="in-check"
+            colors="primary:#28ffff"
+            style="width:40px;height:40px"
+            display="center">
+          </lord-icon>`;
+
+
+        if (done_button_count % 2 != 0) {
+          content_div.style.textDecoration = "line-through";
+          content_div.style.textDecorationThickness = "0.5%";
+          content_div.style.fontWeight = "40";
+          edit_button.style.display = "none";
+          delete_button.style.display = "none";
+          newLine.classList.toggle("completed");
+          // Update the status in the to_do_data object
+          const taskIndex = to_do_data.findIndex(item => item.tasks === data);
+          if (taskIndex !== -1) {
+            to_do_data[taskIndex].status = "completed";
+            saveLocalData();
+            console.log(to_do_data[taskIndex].status);
+          }
+          updateTaskCounts();
+        } else {
+          console.log("yoo bitch !!")
+          content_div.style.fontWeight = "200";
+          done_button.innerHTML = `
+            <lord-icon
+              src="https://cdn.lordicon.com/oqdmuxru.json"
+              trigger="hover"
+              colors="primary:#28ffff"
+              style="width:40px;height:40px"
+              display="center">
+            </lord-icon>`;
+          content_div.style.textDecoration = "none";
+          edit_button.style.display = "inline-block";
+          delete_button.style.display = "inline-block";
+          // Update the status in the to_do_data object
+          const taskIndex = to_do_data.findIndex(item => item.tasks === data);
+          if (taskIndex !== -1) {
+            to_do_data[taskIndex].status = "active";
+            saveLocalData();
+            console.log(to_do_data[taskIndex].status);
+          }
+          updateTaskCounts();
+        }
+      });
+
+      if (status === "completed") {
+        console.log("completed !!!");
+        content_div.style.textDecoration = "line-through";
+          content_div.style.textDecorationThickness = "0.5%";
+          content_div.style.fontWeight = "40";
+          edit_button.style.display = "none";
+          delete_button.style.display = "none";
+          newLine.classList.toggle("completed");
+          done_button.innerHTML = `
+          <lord-icon
+            src="https://cdn.lordicon.com/lomfljuq.json"
+            trigger="in"
+            delay="1500"
+            state="in-check"
+            colors="primary:#28ffff"
+            style="width:40px;height:40px"
+            display="center">
+          </lord-icon>`;
+          }
+
+      edit_button.innerHTML = `
+        <lord-icon
+          src="https://cdn.lordicon.com/wloilxuq.json"
+          trigger="hover"
+          padding="400px"
+          colors="primary:#00ffff,secondary:#e4e4e4"
+          stroke="55"
+          state="hover-1"
+          style="width:40px;height:40px"
+          display="center">
+        </lord-icon>`;
+
+      edited_button.innerHTML = `
+        <lord-icon
+          src="https://cdn.lordicon.com/cgzlioyf.json"
+          trigger="hover"
+          colors="primary:#00ffff,secondary:#e4e4e4"
+          style="width:40px;height:40px"
+          display="center">
+        </lord-icon>`;
+
+      edit_button.addEventListener("click", () => {
+        const edit_to_do = newLine.children[1].innerHTML;
+        var index_edit_to_do = to_do_data.findIndex(item => item.tasks === edit_to_do);
+
+        edited_button.style.display = "inline-block";
+        newLine.style.gridTemplateColumns = "9fr 1fr 1fr 1fr";
+        done_button.style.display = "none";
+
+        content_div.contentEditable = "true";
+        content_div.focus();
+
+        edited_button.addEventListener("click", () => {
+          const edited_to_do = newLine.children[1].innerHTML;
+          to_do_data[index_edit_to_do].tasks = edited_to_do;
+          saveLocalData();
+
+          done_button.style.display = "inline-block";
+          newLine.style.gridTemplateColumns = "1fr 8fr 1fr 1fr 1fr";
+
+          if (content_div.innerHTML === "") {
+            newLine.remove();
+          }
+          content_div.contentEditable = "false";
+          edited_button.style.display = "none";
+        });
+        edited_button.style.marginLeft = "5%";
+        edited_button.style.borderRadius = "20px";
+        edited_button.style.border = "none";
+        edited_button.style.outline = "none";
+      });
+
+      delete_button.addEventListener("click", () => {
+        const to_do_index = newLine.children[1].innerHTML;
+        to_do_data.splice(to_do_data.findIndex(item => item.tasks === to_do_index), 1);
+        saveLocalData();
+        newLine.remove();
+      });
+
+      delete_button.innerHTML = `
+        <lord-icon
+          src="https://cdn.lordicon.com/gsqxdxog.json"
+          trigger="hover"
+          colors="primary:#00ffff,secondary:#e4e4e4"
+          stroke="80"
+          style="width:40px;height:40px"
+          display="center">
+        </lord-icon>`;
+
+      content_div.innerHTML = data;
+      content_div.style.paddingTop = "5px";
+      newLine.appendChild(content_div);
+      newLine.appendChild(edit_button);
+      newLine.appendChild(delete_button);
+      newLine.appendChild(edited_button);
+      containerr.appendChild(newLine);
+      newLine.style.marginLeft = "40px";
+      edit_button.style.borderRadius = "20px";
+      edit_button.style.border = "none";
+      edit_button.style.outline = "none";
+      done_button.style.borderRadius = "20px";
+      done_button.style.border = "none";
+      done_button.style.outline = "none";
+      delete_button.style.borderRadius = "20px";
+      delete_button.style.border = "none";
+      delete_button.style.outline = "none";
+
+      document.getElementById("input").value = "";
+      saveLocalData();
+    }
+  // }
+
+  function saveLocalData(){
+    if (saveToLocal) localStorage.setItem("to_do_data_array", JSON.stringify(to_do_data));
+    updateTaskCounts();
+    }
+  }
+              
+    document.querySelector(".filter_options").addEventListener('change', (e) => {
+    let filteredTodoscontainer = document.querySelector(".containerr");
+    let filteredTodos = filteredTodoscontainer.querySelectorAll(".new_task");
+
+    filteredTodos.forEach(function (newLine) {
+        switch (e.target.value) {
+            case "all":
+                newLine.style.display = "grid";
+                break;
+            case "completed":
+              if (newLine.classList.contains("completed")) {
+                newLine.style.display = "grid";
+              } else {
+                newLine.style.display = "none";
+              }
+              break;
+              case "active":
+                if (!newLine.classList.contains("completed")) {
+                  newLine.style.display = "grid";
+                } else {
+                  newLine.style.display = "none";
+                }
+                break;
+              }
+        updateTaskCounts();
+    });
+});
+
+ScrollReveal({
+      reset : true,
+      distance : '60px',
+      durationIn : 2500,
+      delay : 400
+    });
+
+    ScrollReveal().reveal('.new_task' , { delay : 600 , origin : 'left'});
+    ScrollReveal().reveal('.information_bar' , { delay : 500 , origin : 'right'});
+    ScrollReveal().reveal('.heading' , { delay : 200 , origin : 'top' , distance : '10px' , reset : false});
+    // ScrollReveal().reveal('.mode-icon' , { delay : 200 , origin : 'top'});
+
+
+    function toggleDarkMode() {
+    var body = document.body;
+    // var input_div =document.querySelector("input_div");
+    var container = document.querySelector('.container');
+    container.classList.toggle('dark-mode-container');
+    body.classList.toggle('dark-mode');
+    var isDarkMode = body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', isDarkMode);
+
+    if (body.classList.contains('dark-mode')) {
+        // Dark mode styles
+        body.style.backgroundColor = 'rgb(47, 46, 46)';
+        container.style.backgroundColor = '#292929';
+        container.style.color = 'white';
+        // container.style.boxShadow = '0 8px 20px 0 #00ffff';
+        container.style.backdropFilter = 'blur(3px)';
+        container.style.webkitBackdropFilter = 'blur(3px)';
+        container.style.borderRadius = '10px';
+        container.style.border = '1px solid rgba(255, 255, 255, 0.18)';
+        // input_div.style.backgroundColor = 'rgb(47, 46, 46)';
+        // document.querySelector(".form-control").style.backgroundColor = "gray"
+        // document.querySelector(".filter_todo").style.color = "white";
+        
+        document.getElementById('mode-icon').innerHTML = `
+        <lord-icon
+        src="https://cdn.lordicon.com/almurdoi.json"
+        trigger="hover"
+        stroke="bold"
+        colors="primary:#00ffff,secondary:#e4e4e4"
+        style="width:60px;height:60px">
+        </lord-icon>`;
+      } else {
+        // Light mode styles
+        body.style.backgroundColor = '';
+        container.style.backgroundColor = '';
+        container.style.color = '';
+        container.style.boxShadow = '';
+        container.style.backdropFilter = '';
+        container.style.webkitBackdropFilter = '';
+        container.style.borderRadius = '';
+        container.style.border = '';
+        document.getElementById('mode-icon').innerHTML = `
+            <lord-icon
+                src="https://cdn.lordicon.com/hmygqgiw.json"
+                trigger="hover"
+                stroke="bold"
+                colors="primary:#4be1ec,secondary:#e4e4e4"
+                style="width:60px;height:60px">
+            </lord-icon>`;
+      }
+    }
+
+// function toggleDatePicker() {
+//         var datePicker = document.getElementById("date-picker");
+//         datePicker.style.display = (datePicker.style.display === "block") ? "none" : "block";
+//     }
+
+//     function setDueDate() {
+//         var dueDateInput = document.getElementById("due-date-input");
+//         var dueDateLabel = document.querySelector(".due-date-label");
+//         dueDateLabel.textContent = "Due date: " + dueDateInput.value;
+//         dueDateLabel.classList.remove("d-none");
+//         toggleDatePicker();
+//     }
+
+      </script>
+</html>
